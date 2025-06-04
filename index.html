@@ -1,85 +1,1251 @@
-<!DOCTYPE html>
+        // Click on windows to bring to front
+        document.querySelectorAll('.window').forEach(window => {
+            window.addEventListener('mousedown', () => {
+                bringToFront(window);
+            });
+        });
+
+        // Office Application Functions
+        let currentSlide = 1;
+        const totalSlides<!DOCTYPE html>
 <html lang="id">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Ucapan Balek Pondok</title>
-  <style>
-    body {
-      font-family: Arial, sans-serif;
-      background-color: #f0f8ff;
-      text-align: center;
-      padding: 20px;
-    }
-    .ucapan {
-      margin: 20px auto;
-      padding: 10px;
-      border: 2px solid #008080;
-      border-radius: 10px;
-      background-color: #e0ffff;
-      max-width: 500px;
-    }
-    .pesan {
-      margin: 20px auto;
-      padding: 10px;
-      border: 2px dashed #ff69b4;
-      border-radius: 15px;
-      background-color: #fff0f5;
-      max-width: 500px;
-      font-style: italic;
-    }
-    .pesan-khusus {
-      margin: 20px auto;
-      padding: 10px;
-      border: 2px dotted #9370db;
-      border-radius: 15px;
-      background-color: #e6e6fa;
-      max-width: 500px;
-      font-style: italic;
-      color: #4b0082;
-    }
-    .pesan-romantis {
-      margin: 20px auto;
-      padding: 15px;
-      border: 2px solid #ff1493;
-      border-radius: 20px;
-      background-color: #fff0f5;
-      max-width: 500px;
-      font-style: italic;
-      color: #8b0000;
-      box-shadow: 0 4px 8px rgba(0,0,0,0.1);
-    }
-    
-    .pesan-santri {
-      margin: 20px auto;
-      padding: 15px;
-      border: 3px double #006400;
-      border-radius: 5px;
-      background-color: #f0fff0;
-      max-width: 500px;
-      font-weight: bold;
-      color: #006400;
-      box-shadow: 0 4px 8px rgba(0,100,0,0.2);
-    }
-  </style>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>WebOS - Simulasi Sistem Operasi</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            overflow: hidden;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            height: 100vh;
+        }
+
+        .desktop {
+            position: relative;
+            width: 100vw;
+            height: 100vh;
+            background: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><defs><pattern id="grid" width="10" height="10" patternUnits="userSpaceOnUse"><path d="M 10 0 L 0 0 0 10" fill="none" stroke="rgba(255,255,255,0.1)" stroke-width="0.5"/></pattern></defs><rect width="100" height="100" fill="url(%23grid)"/></svg>');
+        }
+
+        .taskbar {
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            height: 50px;
+            background: rgba(0, 0, 0, 0.8);
+            backdrop-filter: blur(10px);
+            display: flex;
+            align-items: center;
+            padding: 0 10px;
+            z-index: 1000;
+        }
+
+        .start-button {
+            background: linear-gradient(45deg, #4CAF50, #45a049);
+            color: white;
+            border: none;
+            padding: 8px 15px;
+            border-radius: 5px;
+            cursor: pointer;
+            font-weight: bold;
+            margin-right: 10px;
+            transition: all 0.3s ease;
+        }
+
+        .start-button:hover {
+            transform: scale(1.05);
+            box-shadow: 0 4px 8px rgba(0,0,0,0.3);
+        }
+
+        .taskbar-apps {
+            display: flex;
+            gap: 5px;
+            flex: 1;
+        }
+
+        .taskbar-app {
+            background: rgba(255, 255, 255, 0.2);
+            border: none;
+            padding: 8px 12px;
+            border-radius: 5px;
+            color: white;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .taskbar-app:hover {
+            background: rgba(255, 255, 255, 0.3);
+        }
+
+        .taskbar-app.active {
+            background: rgba(255, 255, 255, 0.4);
+        }
+
+        .system-time {
+            color: white;
+            font-size: 14px;
+            margin-left: auto;
+        }
+
+        .desktop-icons {
+            position: absolute;
+            top: 20px;
+            left: 20px;
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+        }
+
+        .desktop-icon {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            cursor: pointer;
+            padding: 10px;
+            border-radius: 8px;
+            transition: all 0.3s ease;
+            width: 80px;
+        }
+
+        .desktop-icon:hover {
+            background: rgba(255, 255, 255, 0.2);
+            transform: scale(1.05);
+        }
+
+        .desktop-icon .icon {
+            width: 48px;
+            height: 48px;
+            background: linear-gradient(45deg, #FF6B6B, #4ECDC4);
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 24px;
+            color: white;
+            margin-bottom: 8px;
+        }
+
+        .desktop-icon .label {
+            color: white;
+            font-size: 12px;
+            text-align: center;
+            text-shadow: 1px 1px 2px rgba(0,0,0,0.5);
+        }
+
+        .window {
+            position: absolute;
+            background: white;
+            border-radius: 10px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.3);
+            min-width: 400px;
+            min-height: 300px;
+            display: none;
+            overflow: hidden;
+        }
+
+        .window.active {
+            display: block;
+            z-index: 100;
+        }
+
+        .window-header {
+            background: linear-gradient(90deg, #667eea, #764ba2);
+            color: white;
+            padding: 12px 15px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            cursor: move;
+        }
+
+        .window-title {
+            font-weight: bold;
+        }
+
+        .window-controls {
+            display: flex;
+            gap: 8px;
+        }
+
+        .window-control {
+            width: 20px;
+            height: 20px;
+            border-radius: 50%;
+            border: none;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .minimize { background: #FFC107; }
+        .maximize { background: #4CAF50; }
+        .close { background: #F44336; }
+
+        .window-control:hover {
+            transform: scale(1.2);
+        }
+
+        .window-content {
+            padding: 20px;
+            height: calc(100% - 50px);
+            overflow-y: auto;
+        }
+
+        .start-menu {
+            position: fixed;
+            bottom: 50px;
+            left: 10px;
+            width: 300px;
+            background: rgba(0, 0, 0, 0.9);
+            backdrop-filter: blur(10px);
+            border-radius: 10px;
+            padding: 20px;
+            display: none;
+            z-index: 1001;
+        }
+
+        .start-menu.active {
+            display: block;
+            animation: slideUp 0.3s ease;
+        }
+
+        @keyframes slideUp {
+            from { transform: translateY(20px); opacity: 0; }
+            to { transform: translateY(0); opacity: 1; }
+        }
+
+        .start-menu-item {
+            display: flex;
+            align-items: center;
+            padding: 10px;
+            color: white;
+            cursor: pointer;
+            border-radius: 5px;
+            margin-bottom: 5px;
+            transition: all 0.3s ease;
+        }
+
+        .start-menu-item:hover {
+            background: rgba(255, 255, 255, 0.2);
+        }
+
+        .start-menu-item .icon {
+            width: 32px;
+            height: 32px;
+            background: linear-gradient(45deg, #FF6B6B, #4ECDC4);
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-right: 12px;
+            font-size: 16px;
+        }
+
+        .calculator {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 10px;
+            max-width: 300px;
+        }
+
+        .calc-display {
+            grid-column: span 4;
+            background: #f0f0f0;
+            border: none;
+            padding: 15px;
+            font-size: 24px;
+            text-align: right;
+            border-radius: 5px;
+        }
+
+        .calc-btn {
+            padding: 15px;
+            border: none;
+            border-radius: 5px;
+            font-size: 18px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            background: #e0e0e0;
+        }
+
+        .calc-btn:hover {
+            background: #d0d0d0;
+            transform: scale(1.05);
+        }
+
+        .calc-btn.operator {
+            background: #667eea;
+            color: white;
+        }
+
+        .notepad-textarea {
+            width: 100%;
+            height: 250px;
+            border: 1px solid #ddd;
+            padding: 10px;
+            font-family: 'Courier New', monospace;
+            resize: none;
+            border-radius: 5px;
+        }
+
+        .file-manager {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+
+        .file-item {
+            display: flex;
+            align-items: center;
+            padding: 10px;
+            background: #f8f9fa;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .file-item:hover {
+            background: #e9ecef;
+        }
+
+        .chart-container {
+            width: 100%;
+            height: 300px;
+            background: #f8f9fa;
+            border-radius: 8px;
+            padding: 15px;
+            margin: 10px 0;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-direction: column;
+        }
+
+        .chart-bar {
+            display: flex;
+            align-items: end;
+            gap: 10px;
+            height: 200px;
+            margin-top: 20px;
+        }
+
+        .bar {
+            background: linear-gradient(to top, #667eea, #764ba2);
+            width: 40px;
+            border-radius: 4px 4px 0 0;
+            position: relative;
+            transition: all 0.3s ease;
+        }
+
+        .bar:hover {
+            transform: scale(1.05);
+        }
+
+        .bar-label {
+            position: absolute;
+            bottom: -25px;
+            left: 50%;
+            transform: translateX(-50%);
+            font-size: 12px;
+            color: #666;
+        }
+
+        .bar-value {
+            position: absolute;
+            top: -25px;
+            left: 50%;
+            transform: translateX(-50%);
+            font-size: 12px;
+            font-weight: bold;
+            color: #333;
+        }
+
+        .office-toolbar {
+            background: #f8f9fa;
+            border-bottom: 1px solid #ddd;
+            padding: 10px;
+            display: flex;
+            gap: 10px;
+            flex-wrap: wrap;
+        }
+
+        .toolbar-btn {
+            background: white;
+            border: 1px solid #ddd;
+            padding: 8px 12px;
+            border-radius: 4px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .toolbar-btn:hover {
+            background: #e9ecef;
+        }
+
+        .word-document {
+            background: white;
+            min-height: 400px;
+            padding: 40px;
+            margin: 20px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+            font-family: 'Times New Roman', serif;
+            line-height: 1.6;
+        }
+
+        .spreadsheet-container {
+            overflow: auto;
+            max-height: 400px;
+        }
+
+        .spreadsheet {
+            border-collapse: collapse;
+            width: 100%;
+            font-size: 12px;
+        }
+
+        .spreadsheet th,
+        .spreadsheet td {
+            border: 1px solid #ddd;
+            padding: 8px;
+            text-align: center;
+            min-width: 80px;
+        }
+
+        .spreadsheet th {
+            background: #f8f9fa;
+            font-weight: bold;
+        }
+
+        .spreadsheet input {
+            border: none;
+            width: 100%;
+            padding: 4px;
+            text-align: center;
+        }
+
+        .slide-container {
+            background: white;
+            width: 100%;
+            height: 300px;
+            border: 2px solid #ddd;
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 20px 0;
+            position: relative;
+        }
+
+        .slide-content {
+            text-align: center;
+            padding: 40px;
+        }
+
+        .slide-nav {
+            display: flex;
+            justify-content: center;
+            gap: 10px;
+            margin-top: 20px;
+        }
+
+        .slide-btn {
+            background: #667eea;
+            color: white;
+            border: none;
+            padding: 8px 16px;
+            border-radius: 4px;
+            cursor: pointer;
+        }
+
+        .system-info-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 20px;
+        }
+
+        .info-card {
+            background: #f8f9fa;
+            border-radius: 8px;
+            padding: 15px;
+            border-left: 4px solid #667eea;
+        }
+
+        .info-title {
+            font-weight: bold;
+            color: #333;
+            margin-bottom: 10px;
+        }
+
+        .progress-bar {
+            background: #e9ecef;
+            border-radius: 10px;
+            height: 8px;
+            overflow: hidden;
+            margin: 5px 0;
+        }
+
+        .progress-fill {
+            height: 100%;
+            background: linear-gradient(90deg, #4CAF50, #45a049);
+            transition: width 0.3s ease;
+        }
+
+        .task-list {
+            max-height: 300px;
+            overflow-y: auto;
+        }
+
+        .task-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 10px;
+            border-bottom: 1px solid #eee;
+        }
+
+        .task-item:hover {
+            background: #f8f9fa;
+        }
+
+        .task-status {
+            padding: 4px 8px;
+            border-radius: 12px;
+            font-size: 12px;
+            font-weight: bold;
+        }
+
+        .status-running {
+            background: #d4edda;
+            color: #155724;
+        }
+
+        .status-idle {
+            background: #fff3cd;
+            color: #856404;
+        }
+    </style>
 </head>
 <body>
-  <div class="ucapan">
-    <h1>Selamat Balek Pondok!</h1>
-    <p>""Selamat kembali ke pondok, ..........! Semoga setiap harimu di sana penuh dengan ilmu dan kebahagiaan. .....akan selalu mendukungmu dari jauh.""</p>
-  </div>
-  <div class="pesan">
-    <p>Jangan lupa makan, istirahat yang cukup, ingat kamu cuma ada satu didunia ini ;)</p>
-  </div>
-  <div class="pesan-khusus">
-    <p>Jangan lupa ya, ada seseorang di sini yang selalu nungguin kamu selesai 'mondok'. Semoga waktu cepat berlalu ya, biar kita bisa segera ketemu dan ngobrol langsung. wkwkwk (pengennya sih gitu 😉)</p>
-  </div>
-  <div class="pesan-romantis">
-    <p>Didiklah aku, didiklah aku menjadi lelaki idamanmu dan jadikan aku sebagai cinta terakhirmu. Cantik.</p>
-  </div>
-  
-  <div class="pesan-santri">
-    <p>Sejauh apapun dunia mengubahmu, ingat yaa kamu pernah menjadi santri dan tidak ada kata mantan santri, sampai kapanpun kamu tetap santri "Kangen Banget Sumpah"</p>
-  </div>
+    <div class="desktop">
+        <!-- Desktop Icons -->
+        <div class="desktop-icons">
+            <div class="desktop-icon" onclick="openApp('calculator')">
+                <div class="icon">🔢</div>
+                <div class="label">Kalkulator</div>
+            </div>
+            <div class="desktop-icon" onclick="openApp('notepad')">
+                <div class="icon">📝</div>
+                <div class="label">Notepad</div>
+            </div>
+            <div class="desktop-icon" onclick="openApp('filemanager')">
+                <div class="icon">📁</div>
+                <div class="label">File Manager</div>
+            </div>
+            <div class="desktop-icon" onclick="openApp('browser')">
+                <div class="icon">🌐</div>
+                <div class="label">Browser</div>
+            </div>
+            <div class="desktop-icon" onclick="openApp('word')">
+                <div class="icon">📄</div>
+                <div class="label">Word Processor</div>
+            </div>
+            <div class="desktop-icon" onclick="openApp('excel')">
+                <div class="icon">📊</div>
+                <div class="label">Spreadsheet</div>
+            </div>
+            <div class="desktop-icon" onclick="openApp('powerpoint')">
+                <div class="icon">📽️</div>
+                <div class="label">Presentation</div>
+            </div>
+            <div class="desktop-icon" onclick="openApp('analytics')">
+                <div class="icon">📈</div>
+                <div class="label">Data Analytics</div>
+            </div>
+            <div class="desktop-icon" onclick="openApp('system')">
+                <div class="icon">⚙️</div>
+                <div class="label">System Info</div>
+            </div>
+            <div class="desktop-icon" onclick="openApp('taskmanager')">
+                <div class="icon">📋</div>
+                <div class="label">Task Manager</div>
+            </div>
+        </div>
+
+        <!-- Windows -->
+        <div id="calculator-window" class="window" style="top: 100px; left: 200px;">
+            <div class="window-header">
+                <div class="window-title">Kalkulator</div>
+                <div class="window-controls">
+                    <button class="window-control minimize" onclick="minimizeWindow('calculator')"></button>
+                    <button class="window-control maximize" onclick="maximizeWindow('calculator')"></button>
+                    <button class="window-control close" onclick="closeWindow('calculator')"></button>
+                </div>
+            </div>
+            <div class="window-content">
+                <div class="calculator">
+                    <input type="text" class="calc-display" id="calc-display" readonly>
+                    <button class="calc-btn" onclick="clearCalc()">C</button>
+                    <button class="calc-btn" onclick="deleteLast()">⌫</button>
+                    <button class="calc-btn operator" onclick="addToCalc('/')">/</button>
+                    <button class="calc-btn operator" onclick="addToCalc('*')">×</button>
+                    <button class="calc-btn" onclick="addToCalc('7')">7</button>
+                    <button class="calc-btn" onclick="addToCalc('8')">8</button>
+                    <button class="calc-btn" onclick="addToCalc('9')">9</button>
+                    <button class="calc-btn operator" onclick="addToCalc('-')">-</button>
+                    <button class="calc-btn" onclick="addToCalc('4')">4</button>
+                    <button class="calc-btn" onclick="addToCalc('5')">5</button>
+                    <button class="calc-btn" onclick="addToCalc('6')">6</button>
+                    <button class="calc-btn operator" onclick="addToCalc('+')">+</button>
+                    <button class="calc-btn" onclick="addToCalc('1')">1</button>
+                    <button class="calc-btn" onclick="addToCalc('2')">2</button>
+                    <button class="calc-btn" onclick="addToCalc('3')">3</button>
+                    <button class="calc-btn operator" onclick="calculate()" style="grid-row: span 2;">=</button>
+                    <button class="calc-btn" onclick="addToCalc('0')" style="grid-column: span 2;">0</button>
+                    <button class="calc-btn" onclick="addToCalc('.')">.</button>
+                </div>
+            </div>
+        </div>
+
+        <div id="notepad-window" class="window" style="top: 120px; left: 250px;">
+            <div class="window-header">
+                <div class="window-title">Notepad</div>
+                <div class="window-controls">
+                    <button class="window-control minimize" onclick="minimizeWindow('notepad')"></button>
+                    <button class="window-control maximize" onclick="maximizeWindow('notepad')"></button>
+                    <button class="window-control close" onclick="closeWindow('notepad')"></button>
+                </div>
+            </div>
+            <div class="window-content">
+                <textarea class="notepad-textarea" placeholder="Ketik sesuatu di sini..."></textarea>
+            </div>
+        </div>
+
+        <div id="filemanager-window" class="window" style="top: 140px; left: 300px;">
+            <div class="window-header">
+                <div class="window-title">File Manager</div>
+                <div class="window-controls">
+                    <button class="window-control minimize" onclick="minimizeWindow('filemanager')"></button>
+                    <button class="window-control maximize" onclick="maximizeWindow('filemanager')"></button>
+                    <button class="window-control close" onclick="closeWindow('filemanager')"></button>
+                </div>
+            </div>
+            <div class="window-content">
+                <div class="file-manager">
+                    <div class="file-item">
+                        <div class="file-icon">📁</div>
+                        <span>Dokumen</span>
+                    </div>
+                    <div class="file-item">
+                        <div class="file-icon">📁</div>
+                        <span>Gambar</span>
+                    </div>
+                    <div class="file-item">
+                        <div class="file-icon">📁</div>
+                        <span>Musik</span>
+                    </div>
+                    <div class="file-item">
+                        <div class="file-icon">📄</div>
+                        <span>readme.txt</span>
+                    </div>
+                    <div class="file-item">
+                        <div class="file-icon">🖼️</div>
+                        <span>wallpaper.jpg</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div id="browser-window" class="window" style="top: 80px; left: 350px; width: 600px; height: 400px;">
+            <div class="window-header">
+                <div class="window-title">WebOS Browser</div>
+                <div class="window-controls">
+                    <button class="window-control minimize" onclick="minimizeWindow('browser')"></button>
+                    <button class="window-control maximize" onclick="maximizeWindow('browser')"></button>
+                    <button class="window-control close" onclick="closeWindow('browser')"></button>
+                </div>
+            </div>
+            <div class="window-content">
+                <div style="margin-bottom: 15px;">
+                    <input type="text" placeholder="Masukkan URL atau kata kunci pencarian..." style="width: 100%; padding: 10px; border: 1px solid #ddd; border-radius: 5px;">
+                </div>
+                <div style="background: #f8f9fa; padding: 20px; border-radius: 5px; text-align: center;">
+                    <h2>Selamat Datang di WebOS Browser</h2>
+                    <p>Browser simulasi untuk sistem operasi web Anda.</p>
+                    <p>Ketik URL atau kata kunci di atas untuk memulai browsing.</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Word Processor Window -->
+        <div id="word-window" class="window" style="top: 60px; left: 400px; width: 700px; height: 500px;">
+            <div class="window-header">
+                <div class="window-title">Word Processor</div>
+                <div class="window-controls">
+                    <button class="window-control minimize" onclick="minimizeWindow('word')"></button>
+                    <button class="window-control maximize" onclick="maximizeWindow('word')"></button>
+                    <button class="window-control close" onclick="closeWindow('word')"></button>
+                </div>
+            </div>
+            <div class="window-content" style="padding: 0;">
+                <div class="office-toolbar">
+                    <button class="toolbar-btn" onclick="formatText('bold')"><b>B</b></button>
+                    <button class="toolbar-btn" onclick="formatText('italic')"><i>I</i></button>
+                    <button class="toolbar-btn" onclick="formatText('underline')"><u>U</u></button>
+                    <button class="toolbar-btn" onclick="insertList()">• List</button>
+                    <button class="toolbar-btn" onclick="saveDocument()">💾 Save</button>
+                    <button class="toolbar-btn" onclick="printDocument()">🖨️ Print</button>
+                </div>
+                <div class="word-document" contenteditable="true" id="word-doc">
+                    <h1>Dokumen Baru</h1>
+                    <p>Mulai mengetik di sini... Anda dapat menggunakan toolbar di atas untuk memformat teks.</p>
+                    <p>Fitur yang tersedia:</p>
+                    <ul>
+                        <li>Format teks (Bold, Italic, Underline)</li>
+                        <li>Membuat daftar</li>
+                        <li>Simpan dan cetak dokumen</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+
+        <!-- Spreadsheet Window -->
+        <div id="excel-window" class="window" style="top: 100px; left: 450px; width: 650px; height: 450px;">
+            <div class="window-header">
+                <div class="window-title">Spreadsheet</div>
+                <div class="window-controls">
+                    <button class="window-control minimize" onclick="minimizeWindow('excel')"></button>
+                    <button class="window-control maximize" onclick="maximizeWindow('excel')"></button>
+                    <button class="window-control close" onclick="closeWindow('excel')"></button>
+                </div>
+            </div>
+            <div class="window-content" style="padding: 0;">
+                <div class="office-toolbar">
+                    <button class="toolbar-btn" onclick="calculateSum()">Σ Sum</button>
+                    <button class="toolbar-btn" onclick="calculateAverage()">📊 Average</button>
+                    <button class="toolbar-btn" onclick="addChart()">📈 Chart</button>
+                    <button class="toolbar-btn" onclick="saveSpreadsheet()">💾 Save</button>
+                </div>
+                <div class="spreadsheet-container">
+                    <table class="spreadsheet" id="spreadsheet">
+                        <thead>
+                            <tr>
+                                <th></th>
+                                <th>A</th>
+                                <th>B</th>
+                                <th>C</th>
+                                <th>D</th>
+                                <th>E</th>
+                                <th>F</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <th>1</th>
+                                <td><input type="text" value="Produk"></td>
+                                <td><input type="text" value="Januari"></td>
+                                <td><input type="text" value="Februari"></td>
+                                <td><input type="text" value="Maret"></td>
+                                <td><input type="text" value="Total"></td>
+                                <td><input type="text"></td>
+                            </tr>
+                            <tr>
+                                <th>2</th>
+                                <td><input type="text" value="Laptop"></td>
+                                <td><input type="number" value="150"></td>
+                                <td><input type="number" value="175"></td>
+                                <td><input type="number" value="200"></td>
+                                <td><input type="text" value="525"></td>
+                                <td><input type="text"></td>
+                            </tr>
+                            <tr>
+                                <th>3</th>
+                                <td><input type="text" value="Mouse"></td>
+                                <td><input type="number" value="300"></td>
+                                <td><input type="number" value="250"></td>
+                                <td><input type="number" value="280"></td>
+                                <td><input type="text" value="830"></td>
+                                <td><input type="text"></td>
+                            </tr>
+                            <tr>
+                                <th>4</th>
+                                <td><input type="text" value="Keyboard"></td>
+                                <td><input type="number" value="120"></td>
+                                <td><input type="number" value="140"></td>
+                                <td><input type="number" value="160"></td>
+                                <td><input type="text" value="420"></td>
+                                <td><input type="text"></td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+
+        <!-- Presentation Window -->
+        <div id="powerpoint-window" class="window" style="top: 120px; left: 500px; width: 600px; height: 450px;">
+            <div class="window-header">
+                <div class="window-title">Presentation</div>
+                <div class="window-controls">
+                    <button class="window-control minimize" onclick="minimizeWindow('powerpoint')"></button>
+                    <button class="window-control maximize" onclick="maximizeWindow('powerpoint')"></button>
+                    <button class="window-control close" onclick="closeWindow('powerpoint')"></button>
+                </div>
+            </div>
+            <div class="window-content">
+                <div class="office-toolbar">
+                    <button class="toolbar-btn" onclick="addSlide()">+ Slide</button>
+                    <button class="toolbar-btn" onclick="deleteSlide()">🗑️ Delete</button>
+                    <button class="toolbar-btn" onclick="startPresentation()">▶️ Present</button>
+                    <button class="toolbar-btn" onclick="savePresentation()">💾 Save</button>
+                </div>
+                <div class="slide-container">
+                    <div class="slide-content" id="current-slide">
+                        <h2>Slide 1: Selamat Datang</h2>
+                        <p>Ini adalah presentasi contoh menggunakan WebOS Presentation.</p>
+                        <p>Gunakan tombol navigasi di bawah untuk berpindah slide.</p>
+                    </div>
+                </div>
+                <div class="slide-nav">
+                    <button class="slide-btn" onclick="previousSlide()">◀ Previous</button>
+                    <span id="slide-counter">Slide 1 dari 3</span>
+                    <button class="slide-btn" onclick="nextSlide()">Next ▶</button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Data Analytics Window -->
+        <div id="analytics-window" class="window" style="top: 140px; left: 550px; width: 700px; height: 500px;">
+            <div class="window-header">
+                <div class="window-title">Data Analytics Dashboard</div>
+                <div class="window-controls">
+                    <button class="window-control minimize" onclick="minimizeWindow('analytics')"></button>
+                    <button class="window-control maximize" onclick="maximizeWindow('analytics')"></button>
+                    <button class="window-control close" onclick="closeWindow('analytics')"></button>
+                </div>
+            </div>
+            <div class="window-content">
+                <div class="office-toolbar">
+                    <button class="toolbar-btn" onclick="refreshData()">🔄 Refresh</button>
+                    <button class="toolbar-btn" onclick="exportData()">📤 Export</button>
+                    <button class="toolbar-btn" onclick="importData()">📥 Import</button>
+                    <select class="toolbar-btn" onchange="changeChartType(this.value)">
+                        <option value="bar">Bar Chart</option>
+                        <option value="line">Line Chart</option>
+                        <option value="pie">Pie Chart</option>
+                    </select>
+                </div>
+                <div class="chart-container">
+                    <h3>Penjualan Produk Q1 2024</h3>
+                    <div class="chart-bar" id="chart-container">
+                        <div class="bar" style="height: 80px;">
+                            <div class="bar-value">150</div>
+                            <div class="bar-label">Jan</div>
+                        </div>
+                        <div class="bar" style="height: 105px;">
+                            <div class="bar-value">175</div>
+                            <div class="bar-label">Feb</div>
+                        </div>
+                        <div class="bar" style="height: 120px;">
+                            <div class="bar-value">200</div>
+                            <div class="bar-label">Mar</div>
+                        </div>
+                        <div class="bar" style="height: 90px;">
+                            <div class="bar-value">160</div>
+                            <div class="bar-label">Apr</div>
+                        </div>
+                        <div class="bar" style="height: 110px;">
+                            <div class="bar-value">185</div>
+                            <div class="bar-label">May</div>
+                        </div>
+                    </div>
+                    <p style="margin-top: 20px; color: #666;">
+                        Total Penjualan: 870 unit | Rata-rata: 174 unit/bulan | Pertumbuhan: +12%
+                    </p>
+                </div>
+            </div>
+        </div>
+
+        <!-- System Info Window -->
+        <div id="system-window" class="window" style="top: 160px; left: 600px; width: 550px; height: 450px;">
+            <div class="window-header">
+                <div class="window-title">System Information</div>
+                <div class="window-controls">
+                    <button class="window-control minimize" onclick="minimizeWindow('system')"></button>
+                    <button class="window-control maximize" onclick="maximizeWindow('system')"></button>
+                    <button class="window-control close" onclick="closeWindow('system')"></button>
+                </div>
+            </div>
+            <div class="window-content">
+                <div class="system-info-grid">
+                    <div class="info-card">
+                        <div class="info-title">💻 Hardware</div>
+                        <p><strong>Processor:</strong> Intel Core i7-12700K</p>
+                        <p><strong>Memory:</strong> 16 GB DDR4</p>
+                        <p><strong>Storage:</strong> 512 GB NVMe SSD</p>
+                        <p><strong>Graphics:</strong> NVIDIA RTX 3070</p>
+                        <div class="progress-bar">
+                            <div class="progress-fill" style="width: 75%;"></div>
+                        </div>
+                        <small>CPU Usage: 75%</small>
+                    </div>
+                    <div class="info-card">
+                        <div class="info-title">🖥️ Software</div>
+                        <p><strong>OS:</strong> WebOS v2.1</p>
+                        <p><strong>Kernel:</strong> 5.19.0-webos</p>
+                        <p><strong>Browser:</strong> WebKit 537.36</p>
+                        <p><strong>Uptime:</strong> 2 days, 14:32:18</p>
+                        <div class="progress-bar">
+                            <div class="progress-fill" style="width: 60%;"></div>
+                        </div>
+                        <small>Memory Usage: 9.6 GB / 16 GB</small>
+                    </div>
+                    <div class="info-card">
+                        <div class="info-title">🌐 Network</div>
+                        <p><strong>Connection:</strong> WiFi (802.11ac)</p>
+                        <p><strong>IP Address:</strong> 192.168.1.100</p>
+                        <p><strong>Download:</strong> 150 Mbps</p>
+                        <p><strong>Upload:</strong> 50 Mbps</p>
+                        <div class="progress-bar">
+                            <div class="progress-fill" style="width: 85%;"></div>
+                        </div>
+                        <small>Signal Strength: 85%</small>
+                    </div>
+                    <div class="info-card">
+                        <div class="info-title">💾 Storage</div>
+                        <p><strong>Total:</strong> 512 GB</p>
+                        <p><strong>Used:</strong> 256 GB</p>
+                        <p><strong>Free:</strong> 256 GB</p>
+                        <p><strong>Health:</strong> Excellent</p>
+                        <div class="progress-bar">
+                            <div class="progress-fill" style="width: 50%;"></div>
+                        </div>
+                        <small>Disk Usage: 50%</small>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Task Manager Window -->
+        <div id="taskmanager-window" class="window" style="top: 180px; left: 650px; width: 600px; height: 400px;">
+            <div class="window-header">
+                <div class="window-title">Task Manager</div>
+                <div class="window-controls">
+                    <button class="window-control minimize" onclick="minimizeWindow('taskmanager')"></button>
+                    <button class="window-control maximize" onclick="maximizeWindow('taskmanager')"></button>
+                    <button class="window-control close" onclick="closeWindow('taskmanager')"></button>
+                </div>
+            </div>
+            <div class="window-content">
+                <div class="office-toolbar">
+                    <button class="toolbar-btn" onclick="refreshTasks()">🔄 Refresh</button>
+                    <button class="toolbar-btn" onclick="endTask()">❌ End Task</button>
+                    <button class="toolbar-btn" onclick="newTask()">➕ New Task</button>
+                </div>
+                <div class="task-list" id="task-list">
+                    <div class="task-item">
+                        <div>
+                            <strong>WebOS System</strong><br>
+                            <small>PID: 1001 | CPU: 12% | Memory: 256 MB</small>
+                        </div>
+                        <span class="task-status status-running">Running</span>
+                    </div>
+                    <div class="task-item">
+                        <div>
+                            <strong>Word Processor</strong><br>
+                            <small>PID: 1023 | CPU: 8% | Memory: 128 MB</small>
+                        </div>
+                        <span class="task-status status-running">Running</span>
+                    </div>
+                    <div class="task-item">
+                        <div>
+                            <strong>Data Analytics</strong><br>
+                            <small>PID: 1045 | CPU: 15% | Memory: 512 MB</small>
+                        </div>
+                        <span class="task-status status-running">Running</span>
+                    </div>
+                    <div class="task-item">
+                        <div>
+                            <strong>File Manager</strong><br>
+                            <small>PID: 1067 | CPU: 2% | Memory: 64 MB</small>
+                        </div>
+                        <span class="task-status status-idle">Idle</span>
+                    </div>
+                    <div class="task-item">
+                        <div>
+                            <strong>Network Service</strong><br>
+                            <small>PID: 1089 | CPU: 5% | Memory: 96 MB</small>
+                        </div>
+                        <span class="task-status status-running">Running</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Start Menu -->
+        <div id="start-menu" class="start-menu">
+            <div class="start-menu-item" onclick="openApp('calculator')">
+                <div class="icon">🔢</div>
+                <span>Kalkulator</span>
+            </div>
+            <div class="start-menu-item" onclick="openApp('notepad')">
+                <div class="icon">📝</div>
+                <span>Notepad</span>
+            </div>
+            <div class="start-menu-item" onclick="openApp('filemanager')">
+                <div class="icon">📁</div>
+                <span>File Manager</span>
+            </div>
+            <div class="start-menu-item" onclick="openApp('browser')">
+                <div class="icon">🌐</div>
+                <span>Browser</span>
+            </div>
+            <div class="start-menu-item" onclick="openApp('word')">
+                <div class="icon">📄</div>
+                <span>Word Processor</span>
+            </div>
+            <div class="start-menu-item" onclick="openApp('excel')">
+                <div class="icon">📊</div>
+                <span>Spreadsheet</span>
+            </div>
+            <div class="start-menu-item" onclick="openApp('powerpoint')">
+                <div class="icon">📽️</div>
+                <span>Presentation</span>
+            </div>
+            <div class="start-menu-item" onclick="openApp('analytics')">
+                <div class="icon">📈</div>
+                <span>Data Analytics</span>
+            </div>
+            <div class="start-menu-item" onclick="openApp('system')">
+                <div class="icon">⚙️</div>
+                <span>System Info</span>
+            </div>
+            <div class="start-menu-item" onclick="openApp('taskmanager')">
+                <div class="icon">📋</div>
+                <span>Task Manager</span>
+            </div>
+            <hr style="margin: 10px 0; border: 1px solid rgba(255,255,255,0.2);">
+            <div class="start-menu-item" onclick="alert('Sistem akan restart...')">
+                <div class="icon">🔄</div>
+                <span>Restart</span>
+            </div>
+            <div class="start-menu-item" onclick="alert('Sistem akan shutdown...')">
+                <div class="icon">⚡</div>
+                <span>Shutdown</span>
+            </div>
+        </div>
+
+        <!-- Taskbar -->
+        <div class="taskbar">
+            <button class="start-button" onclick="toggleStartMenu()">Start</button>
+            <div class="taskbar-apps" id="taskbar-apps"></div>
+            <div class="system-time" id="system-time"></div>
+        </div>
+    </div>
+
+    <script>
+        let openWindows = {};
+        let calcExpression = '';
+
+        // Update system time
+        function updateTime() {
+            const now = new Date();
+            const timeString = now.toLocaleTimeString('id-ID', { 
+                hour: '2-digit', 
+                minute: '2-digit',
+                second: '2-digit'
+            });
+            document.getElementById('system-time').textContent = timeString;
+        }
+
+        setInterval(updateTime, 1000);
+        updateTime();
+
+        // Start menu toggle
+        function toggleStartMenu() {
+            const startMenu = document.getElementById('start-menu');
+            startMenu.classList.toggle('active');
+        }
+
+        // Close start menu when clicking outside
+        document.addEventListener('click', function(e) {
+            const startMenu = document.getElementById('start-menu');
+            const startButton = document.querySelector('.start-button');
+            
+            if (!startMenu.contains(e.target) && !startButton.contains(e.target)) {
+                startMenu.classList.remove('active');
+            }
+        });
+
+        // Window management
+        function openApp(appName) {
+            const window = document.getElementById(appName + '-window');
+            const taskbarApps = document.getElementById('taskbar-apps');
+            
+            if (!openWindows[appName]) {
+                // Create taskbar button
+                const taskbarBtn = document.createElement('button');
+                taskbarBtn.className = 'taskbar-app';
+                taskbarBtn.textContent = getAppTitle(appName);
+                taskbarBtn.onclick = () => toggleWindow(appName);
+                taskbarBtn.id = appName + '-taskbar';
+                taskbarApps.appendChild(taskbarBtn);
+                
+                openWindows[appName] = true;
+            }
+            
+            window.classList.add('active');
+            bringToFront(window);
+            document.getElementById(appName + '-taskbar').classList.add('active');
+            document.getElementById('start-menu').classList.remove('active');
+        }
+
+        function getAppTitle(appName) {
+            const titles = {
+                'calculator': 'Kalkulator',
+                'notepad': 'Notepad',
+                'filemanager': 'File Manager',
+                'browser': 'Browser',
+                'word': 'Word Processor',
+                'excel': 'Spreadsheet',
+                'powerpoint': 'Presentation',
+                'analytics': 'Data Analytics',
+                'system': 'System Info',
+                'taskmanager': 'Task Manager'
+            };
+            return titles[appName] || appName;
+        }
+
+        function closeWindow(appName) {
+            const window = document.getElementById(appName + '-window');
+            const taskbarBtn = document.getElementById(appName + '-taskbar');
+            
+            window.classList.remove('active');
+            if (taskbarBtn) {
+                taskbarBtn.remove();
+            }
+            
+            delete openWindows[appName];
+        }
+
+        function minimizeWindow(appName) {
+            const window = document.getElementById(appName + '-window');
+            const taskbarBtn = document.getElementById(appName + '-taskbar');
+            
+            window.classList.remove('active');
+            taskbarBtn.classList.remove('active');
+        }
+
+        function maximizeWindow(appName) {
+            const window = document.getElementById(appName + '-window');
+            
+            if (window.style.width === '100vw') {
+                // Restore
+                window.style.width = '';
+                window.style.height = '';
+                window.style.top = '';
+                window.style.left = '';
+            } else {
+                // Maximize
+                window.style.width = '100vw';
+                window.style.height = 'calc(100vh - 50px)';
+                window.style.top = '0';
+                window.style.left = '0';
+            }
+        }
+
+        function toggleWindow(appName) {
+            const window = document.getElementById(appName + '-window');
+            const taskbarBtn = document.getElementById(appName + '-taskbar');
+            
+            if (window.classList.contains('active')) {
+                window.classList.remove('active');
+                taskbarBtn.classList.remove('active');
+            } else {
+                window.classList.add('active');
+                taskbarBtn.classList.add('active');
+                bringToFront(window);
+            }
+        }
+
+        function bringToFront(window) {
+            const windows = document.querySelectorAll('.window');
+            windows.forEach(w => w.style.zIndex = '100');
+            window.style.zIndex = '101';
+        }
+
+        // Calculator functions
+        function addToCalc(value) {
+            calcExpression += value;
+            document.getElementById('calc-display').value = calcExpression;
+        }
+
+        function clearCalc() {
+            calcExpression = '';
+            document.getElementById('calc-display').value = '';
+        }
+
+        function deleteLast() {
+            calcExpression = calcExpression.slice(0, -1);
+            document.getElementById('calc-display').value = calcExpression;
+        }
+
+        function calculate() {
+            try {
+                const result = eval(calcExpression.replace('×', '*'));
+                document.getElementById('calc-display').value = result;
+                calcExpression = result.toString();
+            } catch (error) {
+                document.getElementById('calc-display').value = 'Error';
+                calcExpression = '';
+            }
+        }
+
+        // Make windows draggable
+        document.querySelectorAll('.window').forEach(window => {
+            const header = window.querySelector('.window-header');
+            let isDragging = false;
+            let currentX;
+            let currentY;
+            let initialX;
+            let initialY;
+
+            header.addEventListener('mousedown', (e) => {
+                if (e.target.classList.contains('window-control')) return;
+                
+                isDragging = true;
+                initialX = e.clientX - window.offsetLeft;
+                initialY = e.clientY - window.offsetTop;
+                bringToFront(window);
+            });
+
+            document.addEventListener('mousemove', (e) => {
+                if (!isDragging) return;
+                
+                currentX = e.clientX - initialX;
+                currentY = e.clientY - initialY;
+                
+                window.style.left = currentX + 'px';
+                window.style.top = currentY + 'px';
+            });
+
+            document.addEventListener('mouseup', () => {
+                isDragging = false;
+            });
+        });
+
+        // Click on windows to bring to front
+        document.querySelectorAll('.window').forEach(window => {
+            window.addEventListener('mousedown', () => {
+                bringToFront(window);
+            });
+        });
+    </script>
 </body>
 </html>
